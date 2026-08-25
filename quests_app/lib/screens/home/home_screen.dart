@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:quests_app/screens/home/widget/empty_quest_state.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/date_selector.dart';
 import '../../widgets/summary_cards.dart';
 import '../../widgets/filter_chips.dart';
 import '../../widgets/quest_list_item.dart';
+// Import widget baru di sini
 import '../../models/quest_model.dart';
-import '../../core/utils/mock_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Ambil data dari mock_data atau database nantinya
-    final List<QuestModel> quests = MockData.getDailyQuests();
+    final List<QuestModel> quests = []; // Ceritanya kosong
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -23,11 +23,8 @@ class HomeScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             const CustomAppBar(title: 'Quests'),
-            const SizedBox(height: 24),
-            _buildMonthHeader(),
             const SizedBox(height: 16),
             const DateSelector(),
-            const SizedBox(height: 24),
             const SummaryCards(
               percentage: 0.75,
               completed: 3,
@@ -38,31 +35,14 @@ class HomeScreen extends StatelessWidget {
             const FilterChips(),
             const SizedBox(height: 16),
 
-            // Looping data model ke dalam widget global
-            ...quests.map((quest) => QuestListItem(quest: quest)).toList(),
+            // Panggil widget yang sudah dipisah ke folder widgets
+            if (quests.isEmpty)
+              const EmptyQuestState()
+            else
+              ...quests.map((quest) => QuestListItem(quest: quest)).toList(),
           ],
         ),
       ),
-    );
-  }
-
-  // Fungsi kecil spesifik halaman bisa tetap di sini, atau dipindah ke widgets/ jika mau dipakai di tempat lain
-  Widget _buildMonthHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          'Juli 2026',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Row(
-          children: const [
-            Icon(Icons.chevron_left, color: Colors.black54),
-            SizedBox(width: 16),
-            Icon(Icons.chevron_right, color: Colors.black54),
-          ],
-        ),
-      ],
     );
   }
 }
